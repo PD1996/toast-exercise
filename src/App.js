@@ -15,7 +15,8 @@ import {
 } from "./service/mockServer";
 
 function App() {
-  const toast = useRef(null);
+  const newSubmissionToast = useRef(null);
+  const responseToast = useRef(null);
   const [likedSubmissions, setLikedSubmissions] = useState([]);
 
   useEffect(() => {
@@ -27,7 +28,7 @@ function App() {
   }, []);
 
   const showToast = (formSubmission) => {
-    toast.current.show({
+    newSubmissionToast.current.show({
       severity: "success",
       summary: "New Form Submission",
       sticky: true,
@@ -54,9 +55,33 @@ function App() {
   };
 
   const handleLikedSubmission = (formSubmission) => {
-    saveLikedFormSubmission(formSubmission).then(() => {
-      setLikedSubmissions((prev) => [...prev, formSubmission]);
-      toast.current.clear();
+    saveLikedFormSubmission(formSubmission)
+      .then(() => {
+        setLikedSubmissions((prev) => [...prev, formSubmission]);
+        newSubmissionToast.current.clear();
+        showSuccessToast("Saved liked submission successfully!");
+      })
+      .catch((error) => {
+        console.error("Failed to save liked submission:", error);
+        showErrorToast("Failed to like submission. Please try again.");
+      });
+  };
+
+  const showSuccessToast = (message) => {
+    responseToast.current.show({
+      severity: "success",
+      summary: "Success",
+      detail: message,
+      life: 3000,
+    });
+  };
+
+  const showErrorToast = (message) => {
+    responseToast.current.show({
+      severity: "error",
+      summary: "Error",
+      detail: message,
+      life: 5000,
     });
   };
 
@@ -65,7 +90,8 @@ function App() {
       <Header />
       <Container>
         <Content likedSubmissions={likedSubmissions} />
-        <Toast ref={toast} position='bottom-right' />
+        <Toast ref={newSubmissionToast} position='bottom-right' />
+        <Toast ref={responseToast} position='top-left' />
       </Container>
     </>
   );
