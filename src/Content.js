@@ -1,15 +1,26 @@
-import React from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
+import React from "react";
 
-export default function Content() {
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
+import { DataTable } from "primereact/datatable";
+import { Column } from "primereact/column";
+
+export default function Content({ likedSubmissions }) {
   return (
-    <Box sx={{marginTop: 3}}>
-      <Typography variant="h4">Liked Form Submissions</Typography>
-
-      <Typography variant="body1" sx={{fontStyle: 'italic', marginTop: 1}}>
-        TODO: List of liked submissions here (delete this line)
-      </Typography>
+    <Box sx={{ marginTop: 3 }}>
+      <Typography variant='h4'>Liked Form Submissions</Typography>
+      {likedSubmissions.length === 0 ? (
+        <Typography variant='body1' sx={{ fontStyle: "italic", marginTop: 1 }}>
+          No liked submissions yet.
+        </Typography>
+      ) : (
+        <DataTable value={likedSubmissions}>
+          <Column field='data.firstName' header='First Name' />
+          <Column field='data.lastName' header='Last Name' />
+          <Column field='data.email' header='Email' />
+        </DataTable>
+      )}
     </Box>
   );
 }

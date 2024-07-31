@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
@@ -8,13 +8,22 @@ import { Container, Box, Typography } from "@mui/material";
 import Header from "./Header";
 import Content from "./Content";
 
-import { onMessage, saveLikedFormSubmission } from "./service/mockServer";
+import {
+  onMessage,
+  saveLikedFormSubmission,
+  fetchLikedFormSubmissions,
+} from "./service/mockServer";
 
 function App() {
   const toast = useRef(null);
+  const [likedSubmissions, setLikedSubmissions] = useState([]);
 
   useEffect(() => {
     onMessage(showToast);
+
+    fetchLikedFormSubmissions().then((response) => {
+      setLikedSubmissions(response.formSubmissions);
+    });
   }, []);
 
   const showToast = (formSubmission) => {
@@ -54,7 +63,7 @@ function App() {
     <>
       <Header />
       <Container>
-        <Content />
+        <Content likedSubmissions={likedSubmissions} />
         <Toast ref={toast} position='bottom-right' />
       </Container>
     </>
