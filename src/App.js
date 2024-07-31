@@ -22,9 +22,16 @@ function App() {
   useEffect(() => {
     onMessage(showToast);
 
-    fetchLikedFormSubmissions().then((response) => {
-      setLikedSubmissions(response.formSubmissions);
-    });
+    fetchLikedFormSubmissions()
+      .then((response) => {
+        setLikedSubmissions(response.formSubmissions);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch liked submissions:", error);
+        showFetchErrorToast(
+          "Sorry, something went wrong on our end. Please Reload the page to try again."
+        );
+      });
   }, []);
 
   const showToast = (formSubmission) => {
@@ -59,11 +66,11 @@ function App() {
       .then(() => {
         setLikedSubmissions((prev) => [...prev, formSubmission]);
         newSubmissionToast.current.clear();
-        showSuccessToast("Saved liked submission successfully!");
+        showSuccessToast("Your liked submission was saved!");
       })
       .catch((error) => {
         console.error("Failed to save liked submission:", error);
-        showErrorToast("Failed to like submission. Please try again.");
+        showSaveErrorToast("Failed to like submission. Please try again.");
       });
   };
 
@@ -76,12 +83,30 @@ function App() {
     });
   };
 
-  const showErrorToast = (message) => {
+  const showSaveErrorToast = (message) => {
     responseToast.current.show({
       severity: "error",
       summary: "Error",
       detail: message,
       life: 5000,
+    });
+  };
+
+  const showFetchErrorToast = (message) => {
+    responseToast.current.show({
+      severity: "error",
+      summary: "Error",
+      sticky: true,
+      content: (
+        <div>
+          <p>{message}</p>
+          <Button
+            label='Reload Page'
+            severity='danger'
+            onClick={() => window.location.reload()}
+          />
+        </div>
+      ),
     });
   };
 
