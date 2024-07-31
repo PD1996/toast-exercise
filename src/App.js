@@ -8,7 +8,7 @@ import { Container, Box, Typography } from "@mui/material";
 import Header from "./Header";
 import Content from "./Content";
 
-import { onMessage } from "./service/mockServer";
+import { onMessage, saveLikedFormSubmission } from "./service/mockServer";
 
 function App() {
   const toast = useRef(null);
@@ -33,9 +33,20 @@ function App() {
           <Typography variant='body2' sx={{ mb: 2 }}>
             {formSubmission.data.email}
           </Typography>
-          <Button severity='success'>Like</Button>
+          <Button
+            severity='success'
+            onClick={() => handleLikedSubmission(formSubmission)}
+          >
+            Like
+          </Button>
         </Box>
       ),
+    });
+  };
+
+  const handleLikedSubmission = (formSubmission) => {
+    saveLikedFormSubmission(formSubmission).then(() => {
+      toast.current.clear();
     });
   };
 
