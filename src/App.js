@@ -20,7 +20,7 @@ function App() {
   const [likedSubmissions, setLikedSubmissions] = useState([]);
 
   useEffect(() => {
-    onMessage(showToast);
+    onMessage(showNewSubmissionToast);
 
     fetchLikedFormSubmissions()
       .then((response) => {
@@ -34,7 +34,7 @@ function App() {
       });
   }, []);
 
-  const showToast = (formSubmission) => {
+  const showNewSubmissionToast = (formSubmission) => {
     newSubmissionToast.current.show({
       severity: "success",
       summary: "New Form Submission",
@@ -51,11 +51,12 @@ function App() {
             {formSubmission.data.email}
           </Typography>
           <Button
+            label='Like'
+            icon='pi pi-thumbs-up'
+            iconPos='right'
             severity='success'
             onClick={() => handleLikedSubmission(formSubmission)}
-          >
-            Like
-          </Button>
+          ></Button>
         </Box>
       ),
     });
