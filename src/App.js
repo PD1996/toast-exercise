@@ -3,7 +3,7 @@ import React, { useRef, useEffect } from "react";
 import { Toast } from "primereact/toast";
 import { Button } from "primereact/button";
 
-import Container from "@mui/material/Container";
+import { Container, Box, Typography } from "@mui/material";
 
 import Header from "./Header";
 import Content from "./Content";
@@ -15,27 +15,26 @@ function App() {
 
   useEffect(() => {
     onMessage(showToast);
-  });
+  }, []);
 
-  const showToast = () => {
+  const showToast = (formSubmission) => {
     toast.current.show({
       severity: "success",
       summary: "New Form Submission",
       sticky: true,
-      content: (props) => (
-        <div
-          className='flex flex-column align-items-left'
-          style={{ flex: "1" }}
-        >
-          <div className='font-medium text-lg my-3 text-900'>
-            {props.message.summary}
-          </div>
-          <Button
-            className='p-button-sm flex'
-            label='Like'
-            severity='success'
-          ></Button>
-        </div>
+      content: () => (
+        <Box sx={{ flex: 1 }}>
+          <Typography variant='subtitle1' gutterBottom>
+            <strong>New submission</strong>
+          </Typography>
+          <Typography variant='body1' gutterBottom>
+            {`${formSubmission.data.firstName} ${formSubmission.data.lastName}`}
+          </Typography>
+          <Typography variant='body2' sx={{ mb: 2 }}>
+            {formSubmission.data.email}
+          </Typography>
+          <Button severity='success'>Like</Button>
+        </Box>
       ),
     });
   };
