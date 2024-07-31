@@ -55,6 +55,7 @@ function App() {
 
   const handleLikedSubmission = (formSubmission) => {
     saveLikedFormSubmission(formSubmission).then(() => {
+      setLikedSubmissions((prev) => [...prev, formSubmission]);
       toast.current.clear();
     });
   };
